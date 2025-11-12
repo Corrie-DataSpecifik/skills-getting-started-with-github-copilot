@@ -90,20 +90,49 @@ section h3 {
   gap: 8px;
 }
 
-/* make list look neat */
-.activity-card .participants ul {
-  list-style: disc;
-  margin-left: 18px;
-  padding-left: 0;
+/* Hide bullet points and style participant list as flex column */
+.activity-card .participant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.activity-card .participants li {
-  margin-bottom: 6px;
-  color: #444;
-  font-size: 14px;
+.activity-card .participant-item {
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #444;
+  font-size: 14px;
+  padding: 6px 0;
+}
+
+.activity-card .participant-name {
+  flex: 1;
+}
+
+/* Delete button styling */
+.activity-card .delete-btn {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.activity-card .delete-btn:hover {
+  background-color: #b71c1c;
 }
 
 /* small circular avatar derived from email initials */

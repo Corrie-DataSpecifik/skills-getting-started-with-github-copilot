@@ -14,6 +14,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/'/g, "&#039;");
   }
 
+  // Function to unregister a participant from an activity
+  async function unregisterParticipant(activityName, email) {
+    try {
+      const response = await fetch(
+        `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(email)}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        // Refresh activity cards to reflect the removal
+        fetchActivities();
+      } else {
+        const result = await response.json();
+        alert(result.detail || "Failed to unregister participant");
+      }
+    } catch (error) {
+      alert("Failed to unregister participant");
+      console.error("Error unregistering participant:", error);
+    }
+  }
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -38,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (participants.length === 0) {
           participantsHTML += '<p class="no-participants">No participants yet</p>';
         } else {
-          participantsHTML += "<ul>";
+          participantsHTML += "<div class='participant-list'>";
           participants.forEach((p) => {
             const display = p.includes("@") ? p.split("@")[0] : p;
             const initials = display
@@ -46,9 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
               .map((s) => s.charAt(0).toUpperCase())
               .slice(0, 2)
               .join("");
-            participantsHTML += `<li><span class="avatar">${escapeHtml(initials)}</span>${escapeHtml(display)}</li>`;
+            participantsHTML += `<div class="participant-item"><span class="avatar">${escapeHtml(initials)}</span><span class="participant-name">${escapeHtml(display)}</span><button class="delete-btn" onclick="window.unregisterParticipant('${escapeHtml(name)}', '${escapeHtml(p)}')">✕</button></div>`;
           });
-          participantsHTML += "</ul>";
+          participantsHTML += "</div>";
         }
         participantsHTML += "</div>";
 
@@ -120,4 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+
+  // Expose unregisterParticipant globally for onclick handlers
+  window.unregisterParticipant = unregisterParticipant;
 });
